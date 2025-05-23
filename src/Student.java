@@ -10,6 +10,10 @@ public class Student {
         this.requestedAlternativeCourses = requestedAlternativeCourses;
     }
 
+    public void addToClass(SingleClass c) {
+        currentClasses.add(c);
+    }
+
     public void setId(int id) {
         this.id = id;
     }

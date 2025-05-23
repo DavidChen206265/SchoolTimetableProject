@@ -28,6 +28,7 @@ public class SingleClass {
         if(currentCapacity > 0) {
             students.add(s);
             currentCapacity--;
+            s.addToClass(this);
             return true;
         } else {
             return false;
