@@ -12,7 +12,7 @@ public class SingleClass {
         simultaneousCourse = null;
         currentCapacity = maxStudent;
         block = b;
-        students = new ArrayList();
+        students = new ArrayList<>();
     } // SingleClass
 
     public SingleClass(Course c, Course sc, int maxStudent, int b) {
@@ -20,17 +20,15 @@ public class SingleClass {
         simultaneousCourse = sc;
         currentCapacity = maxStudent;
         block = b;
-        students = new ArrayList();
+        students = new ArrayList<>();
     } // SingleClass
-
-    public SingleClass() {
-    }
 
     // returns true if student can be added to the class, false if class is full
     public boolean addStudent(Student s) {
         if(currentCapacity > 0) {
             students.add(s);
             currentCapacity--;
+            s.addToClass(this);
             return true;
         } else {
             return false;

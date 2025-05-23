@@ -1,15 +1,17 @@
 public class Student {
     private int id;
-    private int grade;
     private Arraylist<Course> requestedChosenCourses = new Arraylist<>();
     private Arraylist<Course> requestedAlternativeCourses = new Arraylist<>();
+    private Arraylist<SingleClass> currentClasses = new ArrayList<>();
 
-
-    public Student(int id, int grade, Arraylist<Course> requestedChosenCourses, Arraylist<Course> requestedAlternativeCourses) {
+    public Student(int id, Arraylist<Course> requestedChosenCourses, Arraylist<Course> requestedAlternativeCourses) {
         this.id = id;
-        this.grade = grade;
         this.requestedChosenCourses = requestedChosenCourses;
         this.requestedAlternativeCourses = requestedAlternativeCourses;
+    }
+
+    public void addToClass(SingleClass c) {
+        currentClasses.add(c);
     }
 
     public void setId(int id) {
@@ -18,14 +20,6 @@ public class Student {
 
     public int getId() {
         return id;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
-
-    public int getGrade() {
-        return grade;
     }
 
     public void setRequestedChosenCourses(Arraylist<Course> requestedChosenCourses) {
