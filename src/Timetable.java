@@ -1,30 +1,33 @@
-import sun.jvm.hotspot.opto.Block;
-
-import java.util.*;
-
 public class Timetable {
 
-    private Block[8] blocks;
+    private Block[] blocks;
 
     public Timetable() {
         blocks = new Block[8];
-    }
-
-    public void addBlock(Block b, int i) {
-        if(i >= 0 && i <= 7) {
-            blocks[i] = b;
-        } else {
-            System.out.println("There is no block " + i);
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i] = new Block(i);
         }
     }
 
-    public String toString() {
-        return "Timetable{}";
+
+    public Timetable(Block[] blocks) {
+        this.blocks = blocks;
     }
 
+    public Block[] getBlocks() {
+        return blocks;
+    }
 
+    public void setBlocks(Block[] blocks) {
+        this.blocks = blocks;
+    }
 
-
-
-
+    public String toString() {
+        String str = "";
+        for (int i = 0; i < blocks.length; i++) {
+            str += i + "\n";
+            str += blocks[i] + "\n\n";
+        }
+        return str;
+    }
 }

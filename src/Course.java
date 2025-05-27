@@ -1,25 +1,37 @@
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Course {
-    String code;
-    String name;
-    int primary;
-    int alternate;
-    int maxEnrollment;
-    int sections;
-    ArrayList<SingleClass> classes;
-    ArrayList<Course> simultaneousCourses;
-    ArrayList<Course> prerequiredCourses;
-
+    private String code;
+    private String name;
+    private int primary;
+    private int alternate;
+    private int maxEnrollment;
+    private int sections;
+    private ArrayList<SingleClass> classes;
+    private ArrayList<String> sequencingCourseCodeList;
+    private ArrayList<String> blockingCourseCodeList;
+    private ArrayList<Integer> waitlist;
 
     public Course() {
-        classes = new ArrayList<SingleClass>();
-        simultaneousCourses = new ArrayList<Course>();
-        prerequiredCourses = new ArrayList<Course>();
+        classes = new ArrayList<>();
+        sequencingCourseCodeList = new ArrayList<>();
+        blockingCourseCodeList = new ArrayList<>();
     }
 
-    public Course(String code, String name, int primary, int alternate, int maxEnrollment, int sections, ArrayList<SingleClass> classes, ArrayList<Course> simultaneousCourses, ArrayList<Course> prerequiredCourses) {
+    public Course(String code, String name, int primary, int alternate, int maxEnrollment, int sections) {
+        this.code = code;
+        this.name = name;
+        this.primary = primary;
+        this.alternate = alternate;
+        this.maxEnrollment = maxEnrollment;
+        this.sections = sections;
+        this.classes = new ArrayList<>();
+        this.sequencingCourseCodeList = new ArrayList<>();
+        this.blockingCourseCodeList = new ArrayList<>();
+        this.waitlist = new ArrayList<>();
+    }
+
+    public Course(String code, String name, int primary, int alternate, int maxEnrollment, int sections, ArrayList<SingleClass> classes, ArrayList<String> sequencingCourseCodeList, ArrayList<String> blockingCourseCodeList, ArrayList<Integer> waitlist) {
         this.code = code;
         this.name = name;
         this.primary = primary;
@@ -27,118 +39,69 @@ public class Course {
         this.maxEnrollment = maxEnrollment;
         this.sections = sections;
         this.classes = classes;
-        this.simultaneousCourses = simultaneousCourses;
-        this.prerequiredCourses = prerequiredCourses;
+        this.sequencingCourseCodeList = sequencingCourseCodeList;
+        this.blockingCourseCodeList = blockingCourseCodeList;
+        this.waitlist = waitlist;
     }
 
-    /**
-     * 获取
-     * @return code
-     */
+    public void updateWaitlist() {
+        for (int i = waitlist.size() - 1; i >= 0; i--) {
+            if (waitlist.get(i) == -1) waitlist.remove(i);
+        }
+    }
+
     public String getCode() {
         return code;
     }
 
-    /**
-     * 设置
-     * @param code
-     */
     public void setCode(String code) {
         this.code = code;
     }
 
-    /**
-     * 获取
-     * @return name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * 设置
-     * @param name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 获取
-     * @return primary
-     */
     public int getPrimary() {
         return primary;
     }
 
-    /**
-     * 设置
-     * @param primary
-     */
     public void setPrimary(int primary) {
         this.primary = primary;
     }
 
-    /**
-     * 获取
-     * @return alternate
-     */
     public int getAlternate() {
         return alternate;
     }
 
-    /**
-     * 设置
-     * @param alternate
-     */
     public void setAlternate(int alternate) {
         this.alternate = alternate;
     }
 
-    /**
-     * 获取
-     * @return maxEnrollment
-     */
     public int getMaxEnrollment() {
         return maxEnrollment;
     }
 
-    /**
-     * 设置
-     * @param maxEnrollment
-     */
     public void setMaxEnrollment(int maxEnrollment) {
         this.maxEnrollment = maxEnrollment;
     }
 
-    /**
-     * 获取
-     * @return sections
-     */
     public int getSections() {
         return sections;
     }
 
-    /**
-     * 设置
-     * @param sections
-     */
     public void setSections(int sections) {
         this.sections = sections;
     }
 
-    /**
-     * 获取
-     * @return classes
-     */
     public ArrayList<SingleClass> getClasses() {
         return classes;
     }
 
-    /**
-     * 设置
-     * @param classes
-     */
     public void setClasses(ArrayList<SingleClass> classes) {
         this.classes = classes;
     }
@@ -147,47 +110,44 @@ public class Course {
         classes.add(c);
     }
 
-    /**
-     * 获取
-     * @return simultaneousCourses
-     */
-    public ArrayList<Course> getSimultaneousCourses() {
-        return simultaneousCourses;
+    public ArrayList<String> getSequencingCourseCodeList() {
+        return sequencingCourseCodeList;
     }
 
-    /**
-     * 设置
-     * @param simultaneousCourses
-     */
-    public void setSimultaneousCourses(ArrayList<Course> simultaneousCourses) {
-        this.simultaneousCourses = simultaneousCourses;
+    public void setSequencingCourseCodeList(ArrayList<String> sequencingCourseCodeList) {
+        this.sequencingCourseCodeList = sequencingCourseCodeList;
     }
 
-    public void addSimultaneousCourse(Course c) {
-        simultaneousCourses.add(c);
+    public void addSequencingCourse(String c) {
+        sequencingCourseCodeList.add(c);
     }
 
-    /**
-     * 获取
-     * @return prerequiredCourses
-     */
-    public ArrayList<Course> getPrerequiredCourses() {
-        return prerequiredCourses;
+    public ArrayList<String> getBlockingCourseCodeList() {
+        return blockingCourseCodeList;
     }
 
-    /**
-     * 设置
-     * @param prerequiredCourses
-     */
-    public void setPrerequiredCourses(ArrayList<Course> prerequiredCourses) {
-        this.prerequiredCourses = prerequiredCourses;
+    public void setBlockingCourseCodeList(ArrayList<String> blockingCourseCodeList) {
+        this.blockingCourseCodeList = blockingCourseCodeList;
     }
 
-    addPrerequiredCourse(Course c) {
-        prerequiredCourses.add(c);
+    public void addBlockingCourse(String c) {
+        blockingCourseCodeList.add(c);
+    }
+
+    public ArrayList<Integer> getWaitlist() {
+        return waitlist;
+    }
+
+    public void setWaitlist(ArrayList<Integer> waitlist) {
+        this.waitlist = waitlist;
+    }
+
+    public void addWaitingStudent(int id, boolean isPrioritized) {
+        if (isPrioritized) waitlist.addFirst(id);
+        else waitlist.addLast(id);
     }
 
     public String toString() {
-        return "Course{code = " + code + ", name = " + name + ", primary = " + primary + ", alternate = " + alternate + ", maxEnrollment = " + maxEnrollment + ", sections = " + sections + ", classes = " + classes + ", simultaneousCourses = " + simultaneousCourses + ", prerequiredCourses = " + prerequiredCourses + "}";
+        return "Course{code = " + code + ", name = " + name + ", primary = " + primary + ", alternate = " + alternate + ", maxEnrollment = " + maxEnrollment + ", sections = " + sections + ", classes = " + classes + ", sequencingCourseCodeList = " + sequencingCourseCodeList + ", blockingCourseCodeList = " + blockingCourseCodeList + ", waitlist = " + waitlist + "}";
     }
 }

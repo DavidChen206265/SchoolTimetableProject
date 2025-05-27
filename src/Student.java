@@ -1,17 +1,32 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Student {
     private int id;
-    private Arraylist<Course> requestedChosenCourses = new Arraylist<>();
-    private Arraylist<Course> requestedAlternativeCourses = new Arraylist<>();
-    private Arraylist<SingleClass> currentClasses = new ArrayList<>();
+    private ArrayList<String> requestedChosenCourseCodeList;
+    private ArrayList<String> requestedAlternativeCourseCodeList;
+    private int[] currentClassIdArray;
 
-    public Student(int id, Arraylist<Course> requestedChosenCourses, Arraylist<Course> requestedAlternativeCourses) {
+    public Student(int id, ArrayList<String> requestedChosenCourseCodeList, ArrayList<String> requestedAlternativeCourseCodeList) {
         this.id = id;
-        this.requestedChosenCourses = requestedChosenCourses;
-        this.requestedAlternativeCourses = requestedAlternativeCourses;
+        this.requestedChosenCourseCodeList = requestedChosenCourseCodeList;
+        this.requestedAlternativeCourseCodeList = requestedAlternativeCourseCodeList;
+        this.currentClassIdArray = new int[8];
+        Arrays.fill(currentClassIdArray, -1);
     }
 
-    public void addToClass(SingleClass c) {
-        currentClasses.add(c);
+    public Student() {
+    }
+
+    public Student(int id, ArrayList<String> requestedChosenCourseCodeList, ArrayList<String> requestedAlternativeCourseCodeList, int[] currentClassIdArray) {
+        this.id = id;
+        this.requestedChosenCourseCodeList = requestedChosenCourseCodeList;
+        this.requestedAlternativeCourseCodeList = requestedAlternativeCourseCodeList;
+        this.currentClassIdArray = currentClassIdArray;
+    }
+
+    public void addToClass(int classId, int block) {
+        currentClassIdArray[block] = classId;
     }
 
     public void setId(int id) {
@@ -22,19 +37,33 @@ public class Student {
         return id;
     }
 
-    public void setRequestedChosenCourses(Arraylist<Course> requestedChosenCourses) {
-        this.requestedChosenCourses = requestedChosenCourses;
+    public void setRequestedChosenCourseCodeList(ArrayList<String> requestedChosenCourseCodeList) {
+        this.requestedChosenCourseCodeList = requestedChosenCourseCodeList;
     }
 
-    public Arraylist<Course> getRequestedChosenCourses() {
-        return requestedChosenCourses;
+    public ArrayList<String> getRequestedChosenCourseCodeList() {
+        return requestedChosenCourseCodeList;
     }
 
-    public void setRequestedAlternativeCourses(Arraylist<Course> requestedAlternativeCourses) {
-        this.requestedAlternativeCourses = requestedAlternativeCourses;
+    public void setRequestedAlternativeCourseCodeList(ArrayList<String> requestedAlternativeCourseCodeList) {
+        this.requestedAlternativeCourseCodeList = requestedAlternativeCourseCodeList;
     }
 
-    public Arraylist<Course> getRequestedAlternativeCourses() {
-        return requestedAlternativeCourses;
+    public ArrayList<String> getRequestedAlternativeCourseCodeList() {
+        return requestedAlternativeCourseCodeList;
     }
+
+    public int[] getCurrentClassIdArray() {
+        return currentClassIdArray;
+    }
+
+    public void setCurrentClassIdArray(int[] currentClassIdArray) {
+        this.currentClassIdArray = currentClassIdArray;
+    }
+
+    public String toString() {
+        return "Student{id = " + id + ", requestedChosenCourses = " + requestedChosenCourseCodeList + ", requestedAlternativeCourses = " + requestedAlternativeCourseCodeList + ", currentClasses = " + currentClassIdArray + "}";
+    }
+
 }
+

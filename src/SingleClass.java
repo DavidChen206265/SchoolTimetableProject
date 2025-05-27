@@ -1,122 +1,124 @@
 import java.util.*;
 
 public class SingleClass {
-    private Course course;
-    private Course simultaneousCourse;
+    private static int currentClassId = 0;
+    private int id;
+    private String courseCode;
+    //private Course blockingCourse;
     private int currentCapacity;
     private int block;
-    private ArrayList<Student> students;
+    private ArrayList<Integer> classStudentIdList;
 
-    public SingleClass(Course c, int maxStudent, int b) {
-        course = c;
-        simultaneousCourse = null;
-        currentCapacity = maxStudent;
-        block = b;
-        students = new ArrayList<>();
+    public SingleClass(String courseCode, int currentCapacity, int block) {
+        this.id = currentClassId;
+        currentClassId++;
+        this.courseCode = courseCode;
+        this.currentCapacity = currentCapacity;
+        this.block = block;
+        this.classStudentIdList = new ArrayList<>();
     } // SingleClass
 
-    public SingleClass(Course c, Course sc, int maxStudent, int b) {
-        course = c;
-        simultaneousCourse = sc;
-        currentCapacity = maxStudent;
-        block = b;
-        students = new ArrayList<>();
+    public SingleClass(String courseCode, int currentCapacity) {
+        this.id = currentClassId;
+        currentClassId++;
+        this.courseCode = courseCode;
+        this.currentCapacity = currentCapacity;
+        this.block = -1;
+        this.classStudentIdList = new ArrayList<>();
     } // SingleClass
+
+    public SingleClass() {
+    }
+
+    public SingleClass(int currentClassId, int id, String courseCode, int currentCapacity, int block, ArrayList<Integer> classStudentIdList) {
+        this.currentClassId = currentClassId;
+        this.id = id;
+        this.courseCode = courseCode;
+        this.currentCapacity = currentCapacity;
+        this.block = block;
+        this.classStudentIdList = classStudentIdList;
+    }
+
+    public static int getCurrentClassId() {
+        return currentClassId;
+    }
+
+    public static void setCurrentClassId(int currentClassId) {
+        SingleClass.currentClassId = currentClassId;
+    }
+
+    //public SingleClass(String c, Course sc, int b) {
+    //    courseCode = c;
+    //    blockingCourse = sc;
+    //    currentCapacity = c.getMaxEnrollment();
+    //    block = b;
+    //    classStudentList = new ArrayList<>();
+    //} // SingleClass
 
     // returns true if student can be added to the class, false if class is full
     public boolean addStudent(Student s) {
-        if(currentCapacity > 0) {
-            students.add(s);
+        if (currentCapacity > 0) {
+            classStudentIdList.add(s.getId());
+            s.addToClass(this.id, this.block);
             currentCapacity--;
-            s.addToClass(this);
             return true;
         } else {
             return false;
         } // else
     } // addStudent
 
+    // getters & setters
 
-    /**
-     * 获取
-     * @return course
-     */
-    public Course getCourse() {
-        return course;
+    public String getCourseCode() {
+        return courseCode;
     }
 
-    /**
-     * 设置
-     * @param course
-     */
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
-    /**
-     * 获取
-     * @return simultaneousCourse
-     */
-    public Course getSimultaneousCourse() {
-        return simultaneousCourse;
-    }
+    //public Course getBlockingCourse() {
+    //    return blockingCourse;
+    //}
 
-    /**
-     * 设置
-     * @param simultaneousCourse
-     */
-    public void setSimultaneousCourse(Course simultaneousCourse) {
-        this.simultaneousCourse = simultaneousCourse;
-    }
+    //public void setBlockingCourse(Course blockingCourse) {
+    //    this.blockingCourse = blockingCourse;
+    //}
 
-    /**
-     * 获取
-     * @return currentCapacity
-     */
     public int getCurrentCapacity() {
         return currentCapacity;
     }
 
-    /**
-     * 设置
-     * @param currentCapacity
-     */
     public void setCurrentCapacity(int currentCapacity) {
         this.currentCapacity = currentCapacity;
     }
 
-    /**
-     * 获取
-     * @return block
-     */
     public int getBlock() {
         return block;
     }
 
-    /**
-     * 设置
-     * @param block
-     */
     public void setBlock(int block) {
         this.block = block;
     }
 
-    /**
-     * 获取
-     * @return students
-     */
-    public ArrayList<Student> getStudents() {
-        return students;
+    public ArrayList<Integer> getClassStudentIdList() {
+        return classStudentIdList;
     }
 
-    /**
-     * 设置
-     * @param students
-     */
-    public void setStudents(ArrayList<Student> students) {
-        this.students = students;
+    public void setClassStudentIdList(ArrayList<Integer> classStudentIdList) {
+        this.classStudentIdList = classStudentIdList;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String toString() {
-        return "SingleClass{course = " + course + ", simultaneousCourse = " + simultaneousCourse + ", currentCapacity = " + currentCapacity + ", block = " + block + ", students = " + students + "}";
+        return "SingleClass{currentClassId = " + currentClassId + ", id = " + id + ", courseCode = " + courseCode + ", currentCapacity = " + currentCapacity + ", block = " + block + ", classStudentIdList = " + classStudentIdList + "}";
     }
+
 }
