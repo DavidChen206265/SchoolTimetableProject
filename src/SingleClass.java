@@ -120,4 +120,5 @@ public class SingleClass {
     public String toString() {
         return "SingleClass{currentClassId = " + currentClassId + ", id = " + id + ", courseCode = " + courseCode + ", currentCapacity = " + currentCapacity + ", block = " + block + ", classStudentIdList = " + classStudentIdList + "}";
     }
+
 }
