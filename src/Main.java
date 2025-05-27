@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.Array;
 import java.util.*;
 
 public class Main {
@@ -23,8 +24,37 @@ public class Main {
 
         Timetable t = generateRandomTimetable(1367);
         outputTimetable(t);
+        evaluateTimetable(t);
 
     } // main
+
+    private static void evaluateTimetable(Timetable t) {
+        int fulfilledCourses;
+        int[] arr = new int[8];
+        int totalFulfilled = 0;
+
+        for(Student s : studentList) {
+            fulfilledCourses = 0;
+            for(int id : s.getCurrentClassIdArray()) {
+                for(SingleClass c : t.getAllClasses()){
+                    if (c.getId() == id && s.getRequestedChosenCourseCodeList().contains(c.getCourseCode())){
+                        fulfilledCourses++;
+                    }
+                }
+            }
+            arr[fulfilledCourses - 1]++;
+            totalFulfilled += fulfilledCourses;
+        }
+
+        System.out.println("------- % Of Requested Courses Placed -------");
+        System.out.println((double)totalFulfilled / (8 * studentList.size()) * 100 +"%");
+
+        System.out.println("------- % Of Students With 8/8 -------");
+        System.out.println((double) arr[7] / studentList.size() * 100 +"%");
+
+        System.out.println("------- % Of Students With 7-8/8 -------");
+        System.out.println((double) (arr[7] + arr[6]) / studentList.size() * 100 +"%");
+    }
 
     private static void readInCourseData() throws FileNotFoundException {
 
@@ -140,7 +170,7 @@ public class Main {
 
     private static Timetable generateRandomTimetable(int studentId) {
         Random r = new Random();
-        Timetable t = new Timetable();
+
         ArrayList<SingleClass> classList = new ArrayList<>();
         int block;
 
@@ -149,7 +179,7 @@ public class Main {
                 classList.add(new SingleClass(c.getCode(), c.getMaxEnrollment()));
             }
         }
-
+        Timetable t = new Timetable(classList);
         Collections.shuffle(classList);
 
         if (studentId != -1) {
