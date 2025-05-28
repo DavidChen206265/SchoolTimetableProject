@@ -1,39 +1,68 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
-import java.sql.Array;
 import java.util.*;
+
+
+
 
 public class Main {
 
     private static Map<String, Course> courseMap = new HashMap<>();
     private static ArrayList<Student> studentList = new ArrayList<>();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         readInCourseData();
-        readInSequencingData();
-        readInBlockingData();
+        //readInSequencingData();
+        //readInBlockingData();
         readInStudentData();
 
-        //for (Student s : studentList) {
-        //    System.out.println(s);
-        //}
+        Timetable t = generateRandomTimetable();
+        evaluateTimetable(t, studentList);
+        storeTimetableintoJson(t);
+    }
 
-        //for (Course c : courseMap.values()) {
-        //    System.out.println(c);
-        //}
+    private static void storeTimetableintoJson(Timetable t) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        BufferedWriter bw;
 
-        Timetable t = generateRandomTimetable(1367);
-        outputTimetable(t);
-        evaluateTimetable(t);
 
-    } // main
+        for(Block b : t.getBlocks()){
+            String json = mapper.writeValueAsString(b);
+            bw = new BufferedWriter(new FileWriter("MasterTimetable.json"));
+            System.out.println(json.length());
+            bw.write(json);
+        }
+    }
 
-    private static void evaluateTimetable(Timetable t) {
+    private static void showStudentTimetable(Timetable t, int studentId){
+
+        studentId -= 1000;
+
+        String[] timetableCourseCode = new String[8];
+
+        for (int i = 0; i < t.getBlocks().length; i++) {
+            Block b = t.getBlocks()[i];
+            for (SingleClass c : b.getClasses()) {
+                if(c.getClassStudentIdList().contains(studentId)) {
+                    timetableCourseCode[i] = c.getCourseCode();
+                }
+            }
+        }
+
+        System.out.println("[S1A       ,S1B       ,S1C       ,s1D       ,S2A       ,S2B       ,S2C       ,s2D       ]");
+        System.out.println(Arrays.toString(timetableCourseCode));
+
+    }
+
+    private static void evaluateTimetable(Timetable t, ArrayList<Student> studentListE) {
         int fulfilledCourses;
-        int[] arr = new int[8];
+        int[] arr = new int[9];
         int totalFulfilled = 0;
 
-        for(Student s : studentList) {
+        for(Student s : studentListE) {
             fulfilledCourses = 0;
             for(int id : s.getCurrentClassIdArray()) {
                 for(SingleClass c : t.getAllClasses()){
@@ -42,7 +71,7 @@ public class Main {
                     }
                 }
             }
-            arr[fulfilledCourses - 1]++;
+            arr[fulfilledCourses]++;
             totalFulfilled += fulfilledCourses;
         }
 
@@ -50,10 +79,29 @@ public class Main {
         System.out.println((double)totalFulfilled / (8 * studentList.size()) * 100 +"%");
 
         System.out.println("------- % Of Students With 8/8 -------");
-        System.out.println((double) arr[7] / studentList.size() * 100 +"%");
+        System.out.println((double) arr[8] / studentList.size() * 100 +"%");
 
         System.out.println("------- % Of Students With 7-8/8 -------");
-        System.out.println((double) (arr[7] + arr[6]) / studentList.size() * 100 +"%");
+        System.out.println((double) (arr[8] + arr[7]) / studentList.size() * 100 +"%");
+    }
+
+    private static int evaluateTimetableBonus(Timetable t) {
+        int fulfilledCourses;
+        int[] arr = new int[9];
+
+        for(Student s : studentList) {
+            fulfilledCourses = 0;
+            for(int id : s.getCurrentClassIdArray()) {
+                for(SingleClass c : t.getAllClasses()){
+                    if (c.getId() == id && (s.getRequestedChosenCourseCodeList().contains(c.getCourseCode()) || s.getRequestedAlternativeCourseCodeList().contains(c.getCourseCode()))){
+                        fulfilledCourses++;
+                    }
+                }
+            }
+            arr[fulfilledCourses]++;
+        }
+
+        return (arr[8] + arr[7]);
     }
 
     private static void readInCourseData() throws FileNotFoundException {
@@ -157,7 +205,7 @@ public class Main {
                         courseMap.get(courseCode).addWaitingStudent(id, true);
                     }
                 } catch (Exception e) {
-                    System.out.println("Error on line: " + (row + 1) + " of data_student.csv");
+                    //System.out.println("Error on line: " + (row + 1) + " of data_student.csv");
                 }
 
                 row++;
@@ -168,7 +216,7 @@ public class Main {
         } // for
     } // readInStudentData
 
-    private static Timetable generateRandomTimetable(int studentId) {
+    private static Timetable generateRandomTimetable() {
         Random r = new Random();
 
         ArrayList<SingleClass> classList = new ArrayList<>();
@@ -182,26 +230,6 @@ public class Main {
         Timetable t = new Timetable(classList);
         Collections.shuffle(classList);
 
-        if (studentId != -1) {
-
-            studentId -= 1000;
-            Student s = studentList.get(studentId);
-            String[] neededCourses = new String[8];
-            for (int i = 0; i < s.getRequestedChosenCourseCodeList().size(); i++) {
-                if (i == 8) break;
-                neededCourses[i] = s.getRequestedChosenCourseCodeList().get(i);
-            }
-            for (int i = 0; i < neededCourses.length; i++) {
-                for (int j = 0; j < classList.size(); j++) {
-                    if (classList.get(j).getCourseCode().equals(neededCourses[i])){
-                        SingleClass temp = classList.get(j);
-                        classList.set(j, classList.get(i));
-                        classList.set(i, temp);
-                    }
-                }
-            }
-        }
-
         for (int i = 0; i < classList.size(); i++) {
             block = i % 8;
             SingleClass sc = classList.get(i);
@@ -209,7 +237,7 @@ public class Main {
 
             ArrayList<Integer> waitlist = courseMap.get(sc.getCourseCode()).getWaitlist();
             for (int j = 0; j < waitlist.size(); j++) {
-                if (sc.getCurrentCapacity() == 0) break;
+                //if (sc.getCurrentCapacity() == 0) break;
 
                 Student s = studentList.get(waitlist.get(j));
                 if (s.getCurrentClassIdArray()[block] == -1){

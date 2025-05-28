@@ -57,14 +57,14 @@ public class SingleClass {
 
     // returns true if student can be added to the class, false if class is full
     public boolean addStudent(Student s) {
-        if (currentCapacity > 0) {
+        //if (currentCapacity > 0) {
             classStudentIdList.add(s.getId());
             s.addToClass(this.id, this.block);
             currentCapacity--;
             return true;
-        } else {
-            return false;
-        } // else
+        //} else {
+        //    return false;
+        //} // else
     } // addStudent
 
     // getters & setters
