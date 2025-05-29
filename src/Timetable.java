@@ -1,14 +1,21 @@
+import java.util.ArrayList;
+
 public class Timetable {
 
     private Block[] blocks;
+    private ArrayList<SingleClass> allClasses;
 
-    public Timetable() {
+    public Timetable(ArrayList<SingleClass> allClasses) {
         blocks = new Block[8];
+        this.allClasses = allClasses;
         for (int i = 0; i < blocks.length; i++) {
             blocks[i] = new Block(i);
         }
     }
 
+    public ArrayList<SingleClass> getAllClasses() {
+        return allClasses;
+    }
 
     public Timetable(Block[] blocks) {
         this.blocks = blocks;
